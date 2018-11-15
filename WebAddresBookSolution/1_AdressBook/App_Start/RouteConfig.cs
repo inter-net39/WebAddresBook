@@ -15,13 +15,13 @@ namespace _1_AdressBook
 
             routes.MapRoute(
                 name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Person", action = "Index", id = UrlParameter.Optional }
+                url: "{controller}",
+                defaults: new { controller = "Person", action = "Index", page = 1}
             );
             routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action=Index}/{page?}",
-                defaults: new { controller = "Person", action = "Index", id = UrlParameter.Optional }
+                name: "WithPara",
+                url: "{controller}/{action}/{page}",
+                defaults: new { controller = "Person", action = "Index", page = UrlParameter.Optional }
             );
         }
     }

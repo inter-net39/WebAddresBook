@@ -1,4 +1,6 @@
 ﻿
+@model List<_1_AdressBook.Models.PersonModel>
+
 @{
 	ViewBag.Title = "Index";
 }
@@ -9,3 +11,30 @@
 	Akcja powinna zwracać widok z listą osób
 	pobranych z bazy danych
 *@
+<table>
+	<tr>
+		<th>ID</th>
+		<th>FirstName </th>
+		<th>LastName </th>
+		<th>Phone</th>
+		<th>Email</th>
+		<th>Created</th>
+		<th>Updated</th>
+	</tr>
+	@foreach (var element in Model)
+	{
+		<tr>
+			<td>@Html.DisplayFor(x => element.ID);</td>
+			<td>@Html.DisplayFor(x => element.FirstName);</td>
+			<td>@Html.DisplayFor(x => element.LastName);</td>
+			<td>@Html.DisplayFor(x => element.Phone);</td>
+			<td>@Html.DisplayFor(x => element.Email);</td>
+			<td>@Html.DisplayFor(x => element.Created);</td>
+			<td>@Html.DisplayFor(x => element.Updated);</td>
+		</tr>
+	}
+</table>
+
+@Html.ActionLink("Następna strona", "Index", new { page = (int)TempData["CurrentPage"] + 1 });
+
+

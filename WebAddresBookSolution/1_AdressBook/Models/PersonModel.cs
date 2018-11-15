@@ -6,6 +6,21 @@ namespace _1_AdressBook.Models
 {
     public class PersonModel
     {
+        public PersonModel()
+        {
+
+        }
+        public PersonModel(int iD, string firstName, string lastName, int phone, string email, DateTime created, DateTime? updated)
+        {
+            ID = iD;
+            FirstName = firstName;
+            LastName = lastName;
+            Phone = phone;
+            Email = email;
+            Created = created;
+            Updated = updated;
+        }
+
         [Required(ErrorMessage = "To Pole jest wymagane"), DisplayName("Identyfikator")]
         public int ID { get; set; }
 
