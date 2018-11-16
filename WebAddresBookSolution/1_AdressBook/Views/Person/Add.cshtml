@@ -2,6 +2,16 @@
 @model _1_AdressBook.Models.PersonModel
 @using _1_AdressBook.Models
 
+@if ((int)(TempData["succes"] ) != -1)
+{
+<code>
+	bootbox.alert({
+	message: "Dodano wpis o ID: @TempData["succes"]",
+	}
+	})
+</code>
+}
+
 <div class="col-lg-10 col-md-12 offset-lg-1  align-center mt-5">
 	@using (Html.BeginForm("Add", "Person", FormMethod.Post))
 	{

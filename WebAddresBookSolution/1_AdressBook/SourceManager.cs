@@ -5,13 +5,19 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Web;
+using System.Web.Mvc;
+using _1_AdressBook.Controllers;
 
 namespace _1_AdressBook
 {
     public class SourceManager
     {
-        private string _connectionString = @"Data Source=DESKTOP-11PTBON\SQLEXPRESS;Initial Catalog=AddressBookDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        private string _setupFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "setup.txt");
+
+        private string _connectionString = "";
+
         private SqlConnection _connection;
 
         public List<PersonModel> Get(int start, int take)
@@ -106,7 +112,8 @@ namespace _1_AdressBook
                             {
                                 while (sqlReader.Read())
                                 {
-                                    person = new PersonModel(Convert.ToInt32(sqlReader.GetValue(0)),
+                                    person = new PersonModel(
+                                         Convert.ToInt32(sqlReader.GetValue(0)),
                                          Convert.ToString(sqlReader.GetValue(1)),
                                          Convert.ToString(sqlReader.GetValue(2)),
                                          Convert.ToInt32(sqlReader.GetValue(3)),
@@ -122,10 +129,10 @@ namespace _1_AdressBook
                             }
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         transaction.Rollback();
-                        throw new Exception("#024112");
+                        throw ex;
                     }
                     finally
                     {
@@ -148,10 +155,11 @@ namespace _1_AdressBook
             if (TryOpenDB())
             {
                 SqlTransaction transaction = _connection.BeginTransaction();
+
                 SqlCommand cmd = new SqlCommand()
                 {
-                    CommandText = "INSERT INTO [AddressBookDB].[dbo].[People] " +
-                                  "VALUES( @FirstName, @LastName, @Phone, @Email ,@Created );" +
+                    CommandText = "INSERT INTO [AddressBookDB].[dbo].[People] ( [FirstName], [LastName], [Phone], [Email], [Created], [Updated] ) " +
+                                  "VALUES ( @FirstName, @LastName, @Phone, @Email ,@Created, @Updated ); " +
                                   "SELECT SCOPE_IDENTITY(); ",
                     CommandType = CommandType.Text,
                     Connection = _connection,
@@ -165,7 +173,7 @@ namespace _1_AdressBook
                 };
                 SqlParameter LastName = new SqlParameter()
                 {
-                    ParameterName = "@FirstName",
+                    ParameterName = "@LastName",
                     Value = personModel.LastName,
                     DbType = DbType.String
                 };
@@ -187,32 +195,32 @@ namespace _1_AdressBook
                     Value = DateTime.Now,
                     DbType = DbType.DateTime
                 };
-                //SqlParameter Updated = new SqlParameter()
-                //{
-                //    ParameterName = "@Updated",
-                //    Value = personModel.Updated.Value,
-                //    DbType = DbType.DateTime
-                //};
+                SqlParameter Updated = new SqlParameter()
+                {
+                    ParameterName = "@Updated",
+                    Value = (object)personModel.Updated ?? DBNull.Value,
+                    DbType = DbType.DateTime
+                };
+
                 cmd.Parameters.Add(FirstName);
                 cmd.Parameters.Add(LastName);
                 cmd.Parameters.Add(Phone);
                 cmd.Parameters.Add(Email);
                 cmd.Parameters.Add(Created);
-                //cmd.Parameters.Add(Updated);
+                cmd.Parameters.Add(Updated);
                 try
                 {
-                    result = Convert.ToInt32(cmd.ExecuteScalar());
+                   result = Convert.ToInt32(cmd.ExecuteScalar());
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw new Exception("#024112");
+                    throw ex;
                 }
                 finally
                 {
                     CloseDB();
                 }
-
                 return result;
             }
             throw new Exception("#32250660");
@@ -292,10 +300,10 @@ namespace _1_AdressBook
                     cmd.ExecuteNonQuery();
                     transaction.Commit();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     transaction.Rollback();
-                    new Exception("#86868633");
+                    throw ex;
                 }
                 finally
                 {
@@ -333,9 +341,9 @@ namespace _1_AdressBook
                         new Exception("32252222995");
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    new Exception("$112265865854732");
+                    throw ex;
                 }
                 finally
                 {
@@ -350,20 +358,34 @@ namespace _1_AdressBook
 
         private bool TryOpenDB()
         {
-            if (_connection == null)
-            {
-                _connection = new SqlConnection()
+            try {
+                if (string.IsNullOrEmpty(_connectionString))
                 {
-                    ConnectionString = _connectionString,
-                };
-                _connection.Open();
-                if (_connection.State == ConnectionState.Open)
-                {
-                    return true;
+                    using (StreamReader sr = new StreamReader(_setupFilePath))
+                    {
+                        _connectionString = @sr.ReadToEnd();
+                    }
                 }
-                return false;
+                if (_connection == null)
+                {
+                    _connection = new SqlConnection()
+                    {
+                        ConnectionString = _connectionString,
+                    };
+                    _connection.Open();
+                    if (_connection.State == ConnectionState.Open)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+                throw new Exception("#054322");
             }
-            throw new Exception("#054322");
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         protected void CloseDB()

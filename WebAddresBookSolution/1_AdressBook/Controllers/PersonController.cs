@@ -1,5 +1,6 @@
-﻿using System.Web.Mvc;
-using _1_AdressBook.Models;
+﻿using _1_AdressBook.Models;
+using System;
+using System.Web.Mvc;
 
 namespace _1_AdressBook.Controllers
 {
@@ -11,37 +12,75 @@ namespace _1_AdressBook.Controllers
         [HttpGet]
         public ActionResult Index(int page = 1)
         {
-            TempData["CurrentPage"] = page;
-            return View(new SourceManager().Get((page - 1) * _rowsPerPage, _rowsPerPage));
+            try
+            {
+                TempData["CurrentPage"] = page;
+                return View(new SourceManager().Get((page - 1) * _rowsPerPage, _rowsPerPage));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return RedirectToAction("NotFound404", new { info = e.Message });
+            }
         }
         [HttpPost]
         public ActionResult Index(int page = 1, string filter = "err")
         {
-            TempData["CurrentPage"] = page;
-            return View(new SourceManager().Get((page - 1) * _rowsPerPage, _rowsPerPage));
+            try
+            {
+                TempData["CurrentPage"] = page;
+                return View(new SourceManager().Get((page - 1) * _rowsPerPage, _rowsPerPage));
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("NotFound404", new { info = e.Message });
+            }
         }
 
         [HttpGet]
         public ActionResult Add()
         {
-            return View();
+            try
+            {
+                TempData["succes"] = -1;
+                return View();
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("NotFound404", new{info = e.Message} );
+            }
         }
 
         [HttpPost]
         public ActionResult Add(PersonModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                SourceManager manager = new SourceManager();
-                manager.Add(model);
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    SourceManager manager = new SourceManager();
+                    
+                    TempData["succes"] = manager.Add(model);
+
+                    return View();
+                }
+
+                TempData["succes"] = -1;
+                return View(model);
             }
-            return View(model);
+            catch (Exception e)
+            {
+                return RedirectToAction("NotFound404", new { info = e.Message });
+            }
         }
-        //[HttpGet]
-        //public ActionResult Index()
-        //{
-        //    return View(new SourceManager().Get(1,1));
-        //}
+
+
+
+        public ActionResult NotFound404(string info)
+        {
+            Response.StatusCode = 404;
+            TempData["info"] = info;
+            return View(TempData["info"]);
+        }
     }
 }
