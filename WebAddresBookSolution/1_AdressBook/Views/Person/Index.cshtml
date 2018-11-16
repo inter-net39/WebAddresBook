@@ -1,40 +1,57 @@
 ﻿
+@using System.Web.Razor
+@using System.Web.UI.WebControls
 @model List<_1_AdressBook.Models.PersonModel>
 
-@{
-	ViewBag.Title = "Index";
-}
+<div class="col-lg-10 offset-lg-1 align-center">
+	<div class="d-flex">
+		<div class="col-lg-6 mt-2 p-2">
+			@Html.ActionLink("Dodaj Wpis", "Add", null, new { @class = "btn btn-primary btn-large float-left " })
+		</div>
 
-<h2>Index</h2>
+		<div class="col-lg-6 mt-2 ml-right p-2">
+			@using (Html.BeginForm("Index", "Person", new { page = 1 }, FormMethod.Post, new { @class = " float-right " }))
+			{
+				@Html.TextBox("filter", "", new { @class = "text-info" })
+				<button type="submit" class="btn">Filtruj</button>
+			}
+		</div>
+	</div>
+	<table class="table table-dark align-center mt-2">
 
-@*
-	Akcja powinna zwracać widok z listą osób
-	pobranych z bazy danych
-*@
-<table>
-	<tr>
-		<th>ID</th>
-		<th>FirstName </th>
-		<th>LastName </th>
-		<th>Phone</th>
-		<th>Email</th>
-		<th>Created</th>
-		<th>Updated</th>
-	</tr>
-	@foreach (var element in Model)
-	{
-		<tr>
-			<td>@Html.DisplayFor(x => element.ID);</td>
-			<td>@Html.DisplayFor(x => element.FirstName);</td>
-			<td>@Html.DisplayFor(x => element.LastName);</td>
-			<td>@Html.DisplayFor(x => element.Phone);</td>
-			<td>@Html.DisplayFor(x => element.Email);</td>
-			<td>@Html.DisplayFor(x => element.Created);</td>
-			<td>@Html.DisplayFor(x => element.Updated);</td>
-		</tr>
-	}
-</table>
-
-@Html.ActionLink("Następna strona", "Index", new { page = (int)TempData["CurrentPage"] + 1 });
-
-
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>FirstName </th>
+				<th>LastName </th>
+				<th>Phone</th>
+				<th>Email</th>
+				<th>Created</th>
+				<th>Updated</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var element in Model)
+			{
+				<tr>
+					<td>@Html.DisplayFor(x => element.ID)</td>
+					<td>@Html.DisplayFor(x => element.FirstName)</td>
+					<td>@Html.DisplayFor(x => element.LastName)</td>
+					<td>@Html.DisplayFor(x => element.Phone)</td>
+					<td>@Html.DisplayFor(x => element.Email)</td>
+					<td>@Html.DisplayFor(x => element.Created)</td>
+					<td>@Html.DisplayFor(x => element.Updated)</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<div class="col-xs-6">
+		@if ((int)TempData["CurrentPage"] != 1)
+		{
+			@Html.ActionLink("Poprzednia Strona", "Index", new { page = (int)TempData["CurrentPage"] - 1 }, new { @class = "btn btn-primary btn-large float-left" })
+		}
+	</div>
+	<div class="col-xs-6">
+		@Html.ActionLink("Następna Strona", "Index", new { page = (int)TempData["CurrentPage"] + 1 }, new { @class = "btn btn-primary btn-large float-right" })
+	</div>
+</div>

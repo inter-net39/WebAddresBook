@@ -23,6 +23,11 @@ namespace _1_AdressBook
                 url: "{controller}/{action}/{page}",
                 defaults: new { controller = "Person", action = "Index", page = UrlParameter.Optional }
             );
+            routes.MapRoute(
+                name: "WithParaFilter",
+                url: "{controller}/{action}/{page}/{filter}",
+                defaults: new { controller = "Person", action = "Index", page = UrlParameter.Optional, filter = UrlParameter.Optional  }
+            );
         }
     }
 }

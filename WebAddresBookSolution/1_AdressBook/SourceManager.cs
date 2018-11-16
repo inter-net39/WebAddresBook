@@ -11,7 +11,7 @@ namespace _1_AdressBook
 {
     public class SourceManager
     {
-        private string _connectionString = @"Data Source=DESKTOP-BM19F1V\SQLEXPRESS;Initial Catalog=AddressBookDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        private string _connectionString = @"Data Source=DESKTOP-11PTBON\SQLEXPRESS;Initial Catalog=AddressBookDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         private SqlConnection _connection;
 
         public List<PersonModel> Get(int start, int take)
@@ -238,12 +238,12 @@ namespace _1_AdressBook
                     Connection = _connection,
                     Transaction = transaction
                 };
-                SqlParameter myID = new SqlParameter()
-                {
-                    ParameterName = "@ID",
-                    Value = personModel.ID,
-                    DbType = DbType.Int32
-                };
+                //SqlParameter myID = new SqlParameter()
+                //{
+                //    ParameterName = "@ID",
+                //    Value = personModel.ID,
+                //    DbType = DbType.Int32
+                //};
                 SqlParameter FirstName = new SqlParameter()
                 {
                     ParameterName = "@FirstName",
@@ -280,7 +280,7 @@ namespace _1_AdressBook
                     Value = personModel.Updated.Value,
                     DbType = DbType.DateTime
                 };
-                cmd.Parameters.Add(myID);
+                //cmd.Parameters.Add(myID);
                 cmd.Parameters.Add(FirstName);
                 cmd.Parameters.Add(LastName);
                 cmd.Parameters.Add(Phone);
