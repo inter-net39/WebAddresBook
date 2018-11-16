@@ -151,7 +151,7 @@ namespace _1_AdressBook
                 SqlCommand cmd = new SqlCommand()
                 {
                     CommandText = "INSERT INTO [AddressBookDB].[dbo].[People] " +
-                                  "VALUES( @FirstName, @LastName, @Phone, @Email ,@Created, @Updated);" +
+                                  "VALUES( @FirstName, @LastName, @Phone, @Email ,@Created );" +
                                   "SELECT SCOPE_IDENTITY(); ",
                     CommandType = CommandType.Text,
                     Connection = _connection,
@@ -184,21 +184,21 @@ namespace _1_AdressBook
                 SqlParameter Created = new SqlParameter()
                 {
                     ParameterName = "@Created",
-                    Value = personModel.Created,
+                    Value = DateTime.Now,
                     DbType = DbType.DateTime
                 };
-                SqlParameter Updated = new SqlParameter()
-                {
-                    ParameterName = "@Updated",
-                    Value = personModel.Updated.Value,
-                    DbType = DbType.DateTime
-                };
+                //SqlParameter Updated = new SqlParameter()
+                //{
+                //    ParameterName = "@Updated",
+                //    Value = personModel.Updated.Value,
+                //    DbType = DbType.DateTime
+                //};
                 cmd.Parameters.Add(FirstName);
                 cmd.Parameters.Add(LastName);
                 cmd.Parameters.Add(Phone);
                 cmd.Parameters.Add(Email);
                 cmd.Parameters.Add(Created);
-                cmd.Parameters.Add(Updated);
+                //cmd.Parameters.Add(Updated);
                 try
                 {
                     result = Convert.ToInt32(cmd.ExecuteScalar());
@@ -238,12 +238,12 @@ namespace _1_AdressBook
                     Connection = _connection,
                     Transaction = transaction
                 };
-                //SqlParameter myID = new SqlParameter()
-                //{
-                //    ParameterName = "@ID",
-                //    Value = personModel.ID,
-                //    DbType = DbType.Int32
-                //};
+                SqlParameter myID = new SqlParameter()
+                {
+                    ParameterName = "@ID",
+                    Value = personModel.ID,
+                    DbType = DbType.Int32
+                };
                 SqlParameter FirstName = new SqlParameter()
                 {
                     ParameterName = "@FirstName",
@@ -280,7 +280,7 @@ namespace _1_AdressBook
                     Value = personModel.Updated.Value,
                     DbType = DbType.DateTime
                 };
-                //cmd.Parameters.Add(myID);
+                cmd.Parameters.Add(myID);
                 cmd.Parameters.Add(FirstName);
                 cmd.Parameters.Add(LastName);
                 cmd.Parameters.Add(Phone);

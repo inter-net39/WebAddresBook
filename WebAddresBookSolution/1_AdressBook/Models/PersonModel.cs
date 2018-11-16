@@ -10,7 +10,14 @@ namespace _1_AdressBook.Models
         {
 
         }
-     
+        public PersonModel(string firstName, string lastName, int phone, string email)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Phone = phone;
+            Email = email;
+            Created = DateTime.Now;
+        }
         public PersonModel(int iD, string firstName, string lastName, int phone, string email, DateTime created, DateTime? updated)
         {
             ID = 10;
@@ -21,13 +28,7 @@ namespace _1_AdressBook.Models
             Created = created;
             Updated = updated;
         }
-        public PersonModel( string firstName, string lastName, int phone, string email)
-        {
-            FirstName = firstName;
-            LastName = lastName;
-            Phone = phone;
-            Email = email;
-        }
+
 
         public int ID {get; set; }
 
