@@ -11,8 +11,8 @@
 			{
 				if ((string)(TempData["succes"]) != "")
 				{
-					<div class="alert alert-success" role="alert">
-						<h4 class="alert-heading">Sukces</h4>
+					<div class="alert alert-success text-center" role="alert">
+						<h4 class="alert-heading text-center">Sukces</h4>
 						<p>@TempData["succes"]</p>
 					</div>
 				}
@@ -25,8 +25,8 @@
 			{
 				if ((string)(TempData["error"]) != "")
 				{
-					<div class="alert alert-success" role="alert">
-						<h4 class="alert-heading">Niepowodzenie</h4>
+					<div class="alert alert-danger text-center" role="alert">
+						<h4 class="alert-heading text-center">Niepowodzenie</h4>
 						<p>@TempData["error"]</p>
 					</div>
 				}

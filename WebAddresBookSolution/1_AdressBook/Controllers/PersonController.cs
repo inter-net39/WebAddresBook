@@ -1,5 +1,4 @@
 ﻿using _1_AdressBook.Models;
-using System;
 using System.Web.Mvc;
 
 namespace _1_AdressBook.Controllers
@@ -18,15 +17,8 @@ namespace _1_AdressBook.Controllers
         [HttpGet]
         public ActionResult Add()
         {
-            try
-            {
-                TempData["succes"] = "";
-                return View();
-            }
-            catch (Exception e)
-            {
-                return RedirectToAction("Error500", new { info = e.Message });
-            }
+            TempData["succes"] = "";
+            return View();
         }
 
         [HttpPost]
@@ -70,9 +62,29 @@ namespace _1_AdressBook.Controllers
             TempData["error"] = "Wystąpił błąd podczas edycji użytkownika";
             return RedirectToAction("Index", 1);
         }
-
-
-
-      
+        [HttpGet]
+        public ActionResult Remove(int id)
+        {
+            SourceManager manager = new SourceManager();
+            PersonModel model = manager.GetByID(id);
+            if (model != null)
+            {
+                return View(model);
+            }
+            TempData["error"] = "Wystąpił błąd podczas usuwania użytkownika";
+            return RedirectToAction("Index", 1);
+        }
+        [HttpPost]
+        public ActionResult RemoveConfirm(int id)
+        {
+            SourceManager manager = new SourceManager();
+            if (manager.Remove(id) != 1)
+            {
+                TempData["error"] = "Wystąpił błąd podczas usuwania użytkownika";
+                return RedirectToAction("Index", 1);
+            }
+            TempData["succes"] = "Pomyślnie Usunięto użytkownika użytkownika.";
+            return RedirectToAction("Index", 1);
+        }
     }
 }

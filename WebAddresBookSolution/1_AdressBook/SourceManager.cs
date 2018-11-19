@@ -52,10 +52,6 @@ namespace _1_AdressBook
                                            ));
                                 }
                             }
-                            else
-                            {
-                                throw new Exception("#098");
-                            }
                         }
                     }
                     catch (Exception ex)
@@ -207,6 +203,7 @@ namespace _1_AdressBook
                 try
                 {
                     result = Convert.ToInt32(cmd.ExecuteScalar());
+                    transaction.Commit();
                 }
                 catch (Exception ex)
                 {
@@ -309,14 +306,15 @@ namespace _1_AdressBook
             return result;
         }
 
-        public void Remove(int id)
+        public int Remove(int id)
         {
+            int result = -1;
             if (TryOpenDB())
             {
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandText = "DELETE FROM [AddressBookDB].[dbo].[People] " +
                                   "WHERE ID = @ID";
-                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandType = CommandType.Text;
                 cmd.Connection = _connection;
 
                 SqlParameter para1 = new SqlParameter()
@@ -324,15 +322,11 @@ namespace _1_AdressBook
                     ParameterName = "@ID",
                     Value = id,
                     DbType = DbType.Int32,
-                    Direction = ParameterDirection.Input,
                 };
                 cmd.Parameters.Add(para1);
                 try
                 {
-                    if (cmd.ExecuteNonQuery() == 0)
-                    {
-                        new Exception("32252222995");
-                    }
+                    result = cmd.ExecuteNonQuery();
                 }
                 catch (Exception ex)
                 {
@@ -347,6 +341,8 @@ namespace _1_AdressBook
             {
                 new Exception("$11246262");
             }
+
+            return result;
         }
 
         private bool TryOpenDB()
