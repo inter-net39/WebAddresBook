@@ -8,33 +8,11 @@ namespace _1_AdressBook.Controllers
     {
         private readonly int _rowsPerPage = 3;
 
-
         [HttpGet]
         public ActionResult Index(int page = 1)
         {
-            try
-            {
-                TempData["CurrentPage"] = page;
-                return View(new SourceManager().Get((page - 1) * _rowsPerPage, _rowsPerPage));
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return RedirectToAction("NotFound404", new { info = e.Message });
-            }
-        }
-        [HttpPost]
-        public ActionResult Index(int page = 1, string filter = "err")
-        {
-            try
-            {
-                TempData["CurrentPage"] = page;
-                return View(new SourceManager().Get((page - 1) * _rowsPerPage, _rowsPerPage));
-            }
-            catch (Exception e)
-            {
-                return RedirectToAction("NotFound404", new { info = e.Message });
-            }
+            TempData["CurrentPage"] = page;
+            return View(new SourceManager().Get((page - 1) * _rowsPerPage, _rowsPerPage));
         }
 
         [HttpGet]
@@ -42,45 +20,59 @@ namespace _1_AdressBook.Controllers
         {
             try
             {
-                TempData["succes"] = -1;
+                TempData["succes"] = "";
                 return View();
             }
             catch (Exception e)
             {
-                return RedirectToAction("NotFound404", new{info = e.Message} );
+                return RedirectToAction("Error500", new { info = e.Message });
             }
         }
 
         [HttpPost]
         public ActionResult Add(PersonModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    SourceManager manager = new SourceManager();
-                    
-                    TempData["succes"] = manager.Add(model);
+                SourceManager manager = new SourceManager();
 
-                    return View();
-                }
-
-                TempData["succes"] = -1;
-                return View(model);
+                TempData["succes"] = "Dodano wpis o ID: " + manager.Add(model);
+                return RedirectToAction("Index", "Person");
             }
-            catch (Exception e)
-            {
-                return RedirectToAction("NotFound404", new { info = e.Message });
-            }
+            TempData["succes"] = "Niepowodzenie podczas dodawania uzytkownika";
+            return View(model);
         }
-
-
-
-        public ActionResult NotFound404(string info)
+        [HttpGet]
+        public ActionResult Edit(int id)
         {
-            Response.StatusCode = 404;
-            TempData["info"] = info;
-            return View(TempData["info"]);
+            SourceManager manager = new SourceManager();
+            PersonModel model = manager.GetByID(id);
+            if (model == null)
+            {
+                TempData["error"] = "Wystąpił błąd podczas edycji użytkownika";
+                RedirectToAction("Index", "Person");
+            }
+            return View(model);
         }
+
+        [HttpPost]
+        public ActionResult Edit(PersonModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                SourceManager manager = new SourceManager();
+                if (manager.Update(model) != -1)
+                {
+                    TempData["succes"] = "Pomyślnie zaktualizowano użytkownika o ID = " + model.ID;
+                    return RedirectToAction("Index", "Person");
+                }
+            }
+            TempData["error"] = "Wystąpił błąd podczas edycji użytkownika";
+            return RedirectToAction("Index", 1);
+        }
+
+
+
+      
     }
 }

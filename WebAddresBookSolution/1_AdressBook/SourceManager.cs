@@ -5,16 +5,13 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using System.Security.Policy;
 using System.Web;
-using System.Web.Mvc;
-using _1_AdressBook.Controllers;
 
 namespace _1_AdressBook
 {
     public class SourceManager
     {
-        private string _setupFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "setup.txt");
+        private readonly string _setupFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "setup.txt");
 
         private string _connectionString = "";
 
@@ -44,7 +41,8 @@ namespace _1_AdressBook
                             {
                                 while (sqlReader.Read())
                                 {
-                                    temporaryList.Add(new PersonModel(Convert.ToInt32(sqlReader.GetValue(0)),
+                                    temporaryList.Add(new PersonModel(
+                                        Convert.ToInt32(sqlReader.GetValue(0)),
                                         Convert.ToString(sqlReader.GetValue(1)),
                                         Convert.ToString(sqlReader.GetValue(2)),
                                         Convert.ToInt32(sqlReader.GetValue(3)),
@@ -83,11 +81,10 @@ namespace _1_AdressBook
         public PersonModel GetByID(int id)
         {
             PersonModel person = null;
-            if (id > 1)
+            if (id >= 1)
             {
                 if (TryOpenDB())
                 {
-                    SqlTransaction transaction = _connection.BeginTransaction();
                     SqlCommand cmd = new SqlCommand()
                     {
                         CommandText = "SELECT * " +
@@ -95,7 +92,6 @@ namespace _1_AdressBook
                                       "WHERE [ID] = @id",
                         CommandType = CommandType.Text,
                         Connection = _connection,
-                        Transaction = transaction
                     };
                     SqlParameter myID = new SqlParameter()
                     {
@@ -119,7 +115,7 @@ namespace _1_AdressBook
                                          Convert.ToInt32(sqlReader.GetValue(3)),
                                          Convert.ToString(sqlReader.GetValue(4)),
                                          Convert.ToDateTime(sqlReader.GetValue(5)),
-                                         Convert.ToDateTime(sqlReader.GetValue(6))
+                                         (sqlReader.GetValue(6) as DateTime?)
                                             );
                                 }
                             }
@@ -131,7 +127,6 @@ namespace _1_AdressBook
                     }
                     catch (Exception ex)
                     {
-                        transaction.Rollback();
                         throw ex;
                     }
                     finally
@@ -152,6 +147,7 @@ namespace _1_AdressBook
         public int Add(PersonModel personModel)
         {
             int result = -1;
+
             if (TryOpenDB())
             {
                 SqlTransaction transaction = _connection.BeginTransaction();
@@ -210,7 +206,7 @@ namespace _1_AdressBook
                 cmd.Parameters.Add(Updated);
                 try
                 {
-                   result = Convert.ToInt32(cmd.ExecuteScalar());
+                    result = Convert.ToInt32(cmd.ExecuteScalar());
                 }
                 catch (Exception ex)
                 {
@@ -221,27 +217,27 @@ namespace _1_AdressBook
                 {
                     CloseDB();
                 }
-                return result;
             }
-            throw new Exception("#32250660");
+            return result;
         }
 
-        public void Update(PersonModel personModel)
+        public int Update(PersonModel personModel)
         {
+            int result = -1;
             if (TryOpenDB())
             {
                 SqlTransaction transaction = _connection.BeginTransaction();
 
                 SqlCommand cmd = new SqlCommand()
                 {
-                    CommandText = "UPDATE [AddressBookDB].[dbo].[People]" +
-                                  "SET [FirstName] = @FirstName," +
-                                  "    [LastName] = @LastName," +
-                                  "    [Phone] = @Phone," +
+                    CommandText = "UPDATE [AddressBookDB].[dbo].[People] " +
+                                  "SET [FirstName] = @FirstName, " +
+                                  "    [LastName] = @LastName, " +
+                                  "    [Phone] = @Phone, " +
                                   "    [Email] = @Email, " +
-                                  "    [Created] = @Created " +
-                                  "    [Updated] = @Updated" +
-                                  "WHERE ID = @ID",
+                                  "    [Updated] = @Updated " +
+                                  "WHERE ID = @ID ",
+
                     CommandType = CommandType.Text,
                     Connection = _connection,
                     Transaction = transaction
@@ -260,7 +256,7 @@ namespace _1_AdressBook
                 };
                 SqlParameter LastName = new SqlParameter()
                 {
-                    ParameterName = "@FirstName",
+                    ParameterName = "@LastName",
                     Value = personModel.LastName,
                     DbType = DbType.String
                 };
@@ -276,16 +272,11 @@ namespace _1_AdressBook
                     Value = personModel.Email,
                     DbType = DbType.String
                 };
-                SqlParameter Created = new SqlParameter()
-                {
-                    ParameterName = "@Created",
-                    Value = personModel.Created,
-                    DbType = DbType.DateTime
-                };
+               
                 SqlParameter Updated = new SqlParameter()
                 {
                     ParameterName = "@Updated",
-                    Value = personModel.Updated.Value,
+                    Value = DateTime.Now,
                     DbType = DbType.DateTime
                 };
                 cmd.Parameters.Add(myID);
@@ -293,12 +284,12 @@ namespace _1_AdressBook
                 cmd.Parameters.Add(LastName);
                 cmd.Parameters.Add(Phone);
                 cmd.Parameters.Add(Email);
-                cmd.Parameters.Add(Created);
                 cmd.Parameters.Add(Updated);
                 try
                 {
                     cmd.ExecuteNonQuery();
                     transaction.Commit();
+                    result = 1;
                 }
                 catch (Exception ex)
                 {
@@ -314,6 +305,8 @@ namespace _1_AdressBook
             {
                 new Exception("#54338838");
             }
+
+            return result;
         }
 
         public void Remove(int id)
@@ -358,7 +351,8 @@ namespace _1_AdressBook
 
         private bool TryOpenDB()
         {
-            try {
+            try
+            {
                 if (string.IsNullOrEmpty(_connectionString))
                 {
                     using (StreamReader sr = new StreamReader(_setupFilePath))

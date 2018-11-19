@@ -8,19 +8,11 @@ namespace _1_AdressBook.Models
     {
         public PersonModel()
         {
+        }
 
-        }
-        public PersonModel(string firstName, string lastName, int phone, string email)
-        {
-            FirstName = firstName;
-            LastName = lastName;
-            Phone = phone;
-            Email = email;
-            Created = DateTime.Now;
-        }
         public PersonModel(int iD, string firstName, string lastName, int phone, string email, DateTime created, DateTime? updated)
         {
-            ID = 10;
+            ID = iD;
             FirstName = firstName;
             LastName = lastName;
             Phone = phone;
@@ -28,8 +20,6 @@ namespace _1_AdressBook.Models
             Created = created;
             Updated = updated;
         }
-
-
         public int ID {get; set; }
 
         [Required(ErrorMessage = "To Pole jest wymagane"), MinLength(2, ErrorMessage = "Minimalna długość to 2 znaki"), MaxLength(20, ErrorMessage = "Maksymalna długość to 2 znaki"), DisplayName("Imię")]
@@ -49,5 +39,15 @@ namespace _1_AdressBook.Models
 
         //[DataType(DataType.Date, ErrorMessage = "Bład formatu Daty"), DisplayFormat(DataFormatString = "{0:dd/MMM/yyyy}"), DisplayName("Data Modyfikacji")]
         public DateTime? Updated { get; set; }
+
+        public string GetCreated()
+        {
+            return Created.ToString("dd/MM/yyyy");
+        }
+
+        public string GetUpdated()
+        {
+            return Updated.HasValue ? Updated.Value.ToString("dd/MM/yyyy") : "";
+        }
     }
 }
