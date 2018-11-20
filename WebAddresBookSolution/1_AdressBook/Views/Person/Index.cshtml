@@ -33,60 +33,36 @@
 			}
 		</div>
 	</div>
-	<div class="d-flex justify-content-between">
-		<div class="col-lg-6">
-			@Html.ActionLink("Dodaj Wpis", "Add", null, new { @class = "btn btn-warning" })
-		</div>
+	<div class="card">
+		<h5 class="card-header">Opcje</h5>
+		<div class="card-body">
+			<div class="d-flex justify-content-between">
+				<div class="col-lg-6">
+					@Html.ActionLink("Dodaj Wpis", "Add", null, new { @class = "btn btn-outline-warning" })
+				</div>
 
-		<div class="col-lg-6 float-right">
-			@using (Html.BeginForm("Index", "Person", new { page = 1 }, FormMethod.Post, new { @class = "float-right" }))
-			{
-				<button type="submit" class="btn-secondary float-right">Filtruj</button>
-				@Html.TextBox("filter", "", new { @class = "text-info float-right" })
-			}
+				<div class="col-lg-6 float-right">
+					@using (Html.BeginForm("Index", "Person", new { page = 1 }, FormMethod.Get, new { @class = "float-right" }))
+					{
+						<div class="d-flex">
+							<div>
+								@Html.TextBox("filter", "", new { @class = "form-control" })
+							</div>
+							<div>
+								<button type="submit" class="btn btn-outline-secondary float-right">Szukaj</button>
+							</div>
+						</div>
+					}
+				</div>
+			</div>
 		</div>
 	</div>
-	<table class="table table-dark align-center mt-2 text-center">
-		<thead>
-			<tr>
-				<th>ID</th>
-				<th>FirstName </th>
-				<th>LastName </th>
-				<th>Phone</th>
-				<th>Email</th>
-				<th>Created</th>
-				<th>Updated</th>
-				<th style="width: 180px">Akcja</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var element in Model)
-			{
-				<tr>
-					<td>@Html.DisplayFor(x => element.ID)</td>
-					<td>@Html.DisplayFor(x => element.FirstName)</td>
-					<td>@Html.DisplayFor(x => element.LastName)</td>
-					<td>@Html.DisplayFor(x => element.Phone)</td>
-					<td>@Html.DisplayFor(x => element.Email)</td>
-					<td>@element.GetCreated()</td>
-					<td>@element.GetUpdated()</td>
-					<td>
-						@Html.ActionLink("Edytuj", "Edit", new { element.ID }, new { @class = "btn btn-info float-left" })
-					@Html.ActionLink("Usuń", "Remove", new { element.ID }, new { @class = "btn btn-danger float-right" })
-				</td>
-			</tr>
-		}
-		</tbody>
-	</table>
-	<div class="d-flex justify-content-between">
-		<div class="col-lg-6">
-			@if ((int)TempData["CurrentPage"] != 1)
-			{
-				@Html.ActionLink("Poprzednia Strona", "Index", new { page = (int)TempData["CurrentPage"] - 1 }, new { @class = "btn btn-success" })
-			}
-		</div>
-		<div class="col-lg-6 float-right">
-			@Html.ActionLink("Następna Strona", "Index", new { page = (int)TempData["CurrentPage"] + 1 }, new { @class = "btn btn-success float-right" })
-		</div>
-	</div>
+	@if (TempData["Filter"] != null)
+	{
+		@Html.Action("Table", "Person", new { page = 1, filter = TempData["Filter"].ToString() })
+	}
+	else
+	{
+		@Html.Action("Table", "Person")
+	}
 </div>

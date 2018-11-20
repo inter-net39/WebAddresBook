@@ -1,0 +1,54 @@
+﻿@using System.Web.Razor
+@using System.Web.UI.WebControls
+@model List<_1_AdressBook.Models.PersonModel>
+<div class="card mt-2">
+	<h5 class="card-header">Dane</h5>
+	<div class="card-body">
+		<table class="table  align-center mt-2 text-center">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>FirstName </th>
+					<th>LastName </th>
+					<th>Phone</th>
+					<th>Email</th>
+					<th>Created</th>
+					<th>Updated</th>
+					<th style="width: 180px">Akcja</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var element in Model)
+				{
+					<tr>
+						<td>@Html.DisplayFor(x => element.ID)</td>
+						<td>@Html.DisplayFor(x => element.FirstName)</td>
+						<td>@Html.DisplayFor(x => element.LastName)</td>
+						<td>@Html.DisplayFor(x => element.Phone)</td>
+						<td>@Html.DisplayFor(x => element.Email)</td>
+						<td>@element.GetCreated()</td>
+						<td>@element.GetUpdated()</td>
+						<td>
+							@Html.ActionLink("Edytuj", "Edit", new { element.ID }, new { @class = "btn btn-outline-info float-left" })
+							@Html.ActionLink("Usuń", "Remove", new { element.ID }, new { @class = "btn btn-outline-danger float-right" })
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+		<div class="d-flex justify-content-between">
+			<div class="col-lg-6">
+				@if ((int)TempData["CurrentPage"] != 1)
+				{
+					@Html.ActionLink("Poprzednia Strona", "Index", new { page = (int)TempData["CurrentPage"] - 1, filter = TempData["Filter"] }, new { @class = "btn btn-outline-success" })
+				}
+			</div>
+			<div class="col-lg-6 float-right">
+				@if ((int)TempData["PageCount"] > (int)TempData["CurrentPage"])
+				{
+					@Html.ActionLink("Następna Strona", "Index", new { page = (int)TempData["CurrentPage"] + 1, filter = TempData["Filter"] }, new { @class = "btn btn-outline-success float-right" })
+				}
+			</div>
+		</div>
+	</div>
+</div>

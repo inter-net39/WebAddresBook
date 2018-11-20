@@ -24,15 +24,30 @@ namespace _1_AdressBook
             {
                 if (TryOpenDB())
                 {
-                    SqlTransaction transaction = _connection.BeginTransaction();
                     SqlCommand cmd = new SqlCommand()
                     {
                         CommandText = "SELECT * " +
-                                      "FROM [AddressBookDB].[dbo].[People] ",
+                                      "FROM [AddressBookDB].[dbo].[People] " +
+                                      "ORDER BY ID " +
+                                      "OFFSET @start ROWS " +
+                                      "FETCH NEXT @take ROWS ONLY;",
                         CommandType = CommandType.Text,
                         Connection = _connection,
-                        Transaction = transaction
                     };
+                    SqlParameter para1 = new SqlParameter()
+                    {
+                        ParameterName = "@start",
+                        Value = start,
+                        DbType = DbType.Int32
+                    };
+                    SqlParameter para2 = new SqlParameter()
+                    {
+                        ParameterName = "@take",
+                        Value = take,
+                        DbType = DbType.Int32
+                    };
+                    cmd.Parameters.Add(para1);
+                    cmd.Parameters.Add(para2);
                     try
                     {
                         using (SqlDataReader sqlReader = cmd.ExecuteReader())
@@ -56,24 +71,182 @@ namespace _1_AdressBook
                     }
                     catch (Exception ex)
                     {
-                        transaction.Rollback();
                         throw new Exception(ex.Message);
                     }
                     finally
                     {
                         CloseDB();
                     }
-
-                    return temporaryList.Skip(start).Take(take).ToList();
                 }
             }
-            else
+
+            if (temporaryList != null)
             {
-                throw new Exception("#092");
+                return temporaryList;
             }
+
+            return null;
+        }
+        public List<PersonModel> Get(int start, int take, string filter)
+        {
+            List<PersonModel> temporaryList = new List<PersonModel>();
+            if (start >= 0 && take > 0)
+            {
+                if (TryOpenDB())
+                {
+                    SqlCommand cmd = new SqlCommand()
+                    {
+                        CommandText = "SELECT * " +
+                                      "FROM [AddressBookDB].[dbo].[People] " +
+                                      "WHERE LastName LIKE @filter " +
+                                      "ORDER BY ID " +
+                                      "OFFSET @start ROWS " +
+                                      "FETCH NEXT @take ROWS ONLY;",
+                        CommandType = CommandType.Text,
+                        Connection = _connection,
+                    };
+                    SqlParameter para1 = new SqlParameter()
+                    {
+                        ParameterName = "@start",
+                        Value = start,
+                        DbType = DbType.Int32
+                    };
+                    SqlParameter para2 = new SqlParameter()
+                    {
+                        ParameterName = "@take",
+                        Value = take,
+                        DbType = DbType.Int32
+                    };
+                    SqlParameter para3 = new SqlParameter()
+                    {
+                        ParameterName = "@filter",
+                        Value = "%"+filter+"%",
+                        DbType = DbType.String
+                    };
+                    cmd.Parameters.Add(para1);
+                    cmd.Parameters.Add(para2);
+                    cmd.Parameters.Add(para3);
+                    try
+                    {
+                        using (SqlDataReader sqlReader = cmd.ExecuteReader())
+                        {
+                            if (sqlReader.HasRows)
+                            {
+                                while (sqlReader.Read())
+                                {
+                                    temporaryList.Add(new PersonModel(
+                                        Convert.ToInt32(sqlReader.GetValue(0)),
+                                        Convert.ToString(sqlReader.GetValue(1)),
+                                        Convert.ToString(sqlReader.GetValue(2)),
+                                        Convert.ToInt32(sqlReader.GetValue(3)),
+                                        Convert.ToString(sqlReader.GetValue(4)),
+                                        Convert.ToDateTime(sqlReader.GetValue(5)),
+                                        (sqlReader.GetValue(6) as DateTime?)
+                                           ));
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.Message);
+                    }
+                    finally
+                    {
+                        CloseDB();
+                    }
+                }
+            }
+
+            if (temporaryList != null)
+            {
+                return temporaryList;
+            }
+
             return null;
         }
 
+        public int GetCount()
+        {
+            int result = 0;
+            if (TryOpenDB())
+            {
+                SqlCommand cmd = new SqlCommand()
+                {
+                    CommandText = "SELECT COUNT(DISTINCT ID) " +
+                                  "FROM [AddressBookDB].[dbo].[People] ",
+                    CommandType = CommandType.Text,
+                    Connection = _connection,
+                };
+                try
+                {
+                    using (SqlDataReader sqlReader = cmd.ExecuteReader())
+                    {
+                        if (sqlReader.HasRows)
+                        {
+                            while (sqlReader.Read())
+                            {
+                                result = Convert.ToInt32(sqlReader.GetValue(0));
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+                finally
+                {
+                    CloseDB();
+                }
+            }
+            return result;
+        }
+        public int GetCount(string filter)
+        {
+            int result = 0;
+            if (TryOpenDB())
+            {
+                SqlCommand cmd = new SqlCommand()
+                {
+                    CommandText = "SELECT COUNT(DISTINCT ID) " +
+                                  "FROM [AddressBookDB].[dbo].[People] " +
+                                  "WHERE LastName LIKE @filter ",
+                    CommandType = CommandType.Text,
+                    Connection = _connection,
+                };
+                SqlParameter para1 = new SqlParameter()
+                {
+                    ParameterName = "@filter",
+                    Value = "%"+filter+"%",
+                    DbType = DbType.String
+                };
+                cmd.Parameters.Add(para1);
+                try
+                {
+                    using (SqlDataReader sqlReader = cmd.ExecuteReader())
+                    {
+                        if (sqlReader.HasRows)
+                        {
+                            while (sqlReader.Read())
+                            {
+                                result = Convert.ToInt32(sqlReader.GetValue(0));
+                            }
+                        }
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+                finally
+                {
+                    CloseDB();
+                }
+            }
+            return result;
+        }
         public PersonModel GetByID(int id)
         {
             PersonModel person = null;
@@ -269,7 +442,7 @@ namespace _1_AdressBook
                     Value = personModel.Email,
                     DbType = DbType.String
                 };
-               
+
                 SqlParameter Updated = new SqlParameter()
                 {
                     ParameterName = "@Updated",
@@ -311,11 +484,13 @@ namespace _1_AdressBook
             int result = -1;
             if (TryOpenDB())
             {
-                SqlCommand cmd = new SqlCommand();
-                cmd.CommandText = "DELETE FROM [AddressBookDB].[dbo].[People] " +
-                                  "WHERE ID = @ID";
-                cmd.CommandType = CommandType.Text;
-                cmd.Connection = _connection;
+                SqlCommand cmd = new SqlCommand
+                {
+                    CommandText = "DELETE FROM [AddressBookDB].[dbo].[People] " +
+                                  "WHERE ID = @ID",
+                    CommandType = CommandType.Text,
+                    Connection = _connection
+                };
 
                 SqlParameter para1 = new SqlParameter()
                 {

@@ -6,58 +6,63 @@
 
 
 <div class="col-lg-10 col-md-12 offset-lg-1  align-center mt-5">
-	@using (Html.BeginForm("Edit", "Person", FormMethod.Post))
-	{
-		@Html.HiddenFor(x => x.ID)
+	<div class="card mt-2">
+		<h5 class="card-header">Edytuj Osobę</h5>
+		<div class="card-body">
+			@using (Html.BeginForm("Edit", "Person", FormMethod.Post))
+			{
+				@Html.HiddenFor(x => x.ID)
 
-		<div class="d-flex">
-			<div class="col-lg-2 offset-lg-2 mt-2 p-2">
-				@Html.LabelFor(x => x.FirstName):
-			</div>
-			<div class="col-lg-4 mt-2 p-2">
-				@Html.TextBoxFor(x => x.FirstName, new { @class = "pmtallocated pull-right", @style = "width:90%" })
-			</div>
-			<div class="col-lg-4 mt-2 ml-right p-2">
-				@Html.ValidationMessageFor(x => x.FirstName)
-			</div>
+				<div class="d-flex">
+					<div class="col-lg-2 offset-lg-2 mt-2 p-2">
+						@Html.LabelFor(x => x.FirstName):
+					</div>
+					<div class="col-lg-4 mt-2 p-2">
+						@Html.TextBoxFor(x => x.FirstName, new { @class = " pull-right", @style = "width:90%" })
+					</div>
+					<div class="col-lg-4 mt-2 ml-right p-2">
+						@Html.ValidationMessageFor(x => x.FirstName)
+					</div>
+				</div>
+				<div class="d-flex">
+					<div class="col-lg-2 offset-lg-2 mt-2 p-2">
+						@Html.LabelFor(x => x.LastName):
+					</div>
+					<div class="col-lg-4 mt-2 p-2">
+						@Html.TextBoxFor(x => x.LastName, new { @class = " pull-right", @style = "width:90%" })
+					</div>
+					<div class="col-lg-4 mt-2 p-2">
+						@Html.ValidationMessageFor(x => x.LastName)
+					</div>
+				</div>
+				<div class="d-flex">
+					<div class="col-lg-2 offset-lg-2 mt-2 p-2">
+						@Html.LabelFor(x => x.Email):
+					</div>
+					<div class="col-lg-4 mt-2 p-2">
+						@Html.TextBoxFor(x => x.Email, new { @class = " pull-right", @style = "width:90%" })
+					</div>
+					<div class="col-lg-4 mt-2 p-2">
+						@Html.ValidationMessageFor(x => x.Email)
+					</div>
+				</div>
+				<div class="d-flex">
+					<div class="col-lg-2 offset-lg-2 mt-2 p-2">
+						@Html.LabelFor(x => x.Phone):
+					</div>
+					<div class="col-lg-4 mt-2 p-2">
+						@Html.TextBoxFor(x => x.Phone, new { @class = " pull-right", @style = "width:90%" })
+					</div>
+					<div class="col-lg-4 mt-2 p-2">
+						@Html.ValidationMessageFor(x => x.Phone)
+					</div>
+				</div>
+				<div class="d-flex align-center">
+					<div class="col-lg-2 offset-lg-6">
+						<button type="submit" class="btn btn-outline-success">Zapisz zmiany</button>
+					</div>
+				</div>
+			}
 		</div>
-		<div class="d-flex">
-			<div class="col-lg-2 offset-lg-2 mt-2 p-2">
-				@Html.LabelFor(x => x.LastName):
-			</div>
-			<div class="col-lg-4 mt-2 p-2">
-				@Html.TextBoxFor(x => x.LastName, new { @class = "pmtallocated pull-right", @style = "width:90%" })
-			</div>
-			<div class="col-lg-4 mt-2 p-2">
-				@Html.ValidationMessageFor(x => x.LastName)
-			</div>
-		</div>
-		<div class="d-flex">
-			<div class="col-lg-2 offset-lg-2 mt-2 p-2">
-				@Html.LabelFor(x => x.Email):
-			</div>
-			<div class="col-lg-4 mt-2 p-2">
-				@Html.TextBoxFor(x => x.Email, new { @class = "pmtallocated pull-right", @style = "width:90%" })
-			</div>
-			<div class="col-lg-4 mt-2 p-2">
-				@Html.ValidationMessageFor(x => x.Email)
-			</div>
-		</div>
-		<div class="d-flex">
-			<div class="col-lg-2 offset-lg-2 mt-2 p-2">
-				@Html.LabelFor(x => x.Phone):
-			</div>
-			<div class="col-lg-4 mt-2 p-2">
-				@Html.TextBoxFor(x => x.Phone, new { @class = "pmtallocated pull-right", @style = "width:90%" })
-			</div>
-			<div class="col-lg-4 mt-2 p-2">
-				@Html.ValidationMessageFor(x => x.Phone)
-			</div>
-		</div>
-		<div class="d-flex align-center">
-			<div class="col-lg-2 offset-lg-6">
-				<button type="submit" class="btn">Dodaj osobę</button>
-			</div>
-		</div>
-	}
+	</div>
 </div>
