@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 
 namespace _1_AdressBook
@@ -333,13 +334,13 @@ namespace _1_AdressBook
                 SqlParameter FirstName = new SqlParameter()
                 {
                     ParameterName = "@FirstName",
-                    Value = personModel.FirstName,
+                    Value = _firstToUpper(personModel.FirstName),
                     DbType = DbType.String
                 };
                 SqlParameter LastName = new SqlParameter()
                 {
                     ParameterName = "@LastName",
-                    Value = personModel.LastName,
+                    Value = _firstToUpper(personModel.LastName),
                     DbType = DbType.String
                 };
                 SqlParameter Phone = new SqlParameter()
@@ -351,7 +352,7 @@ namespace _1_AdressBook
                 SqlParameter Email = new SqlParameter()
                 {
                     ParameterName = "@Email",
-                    Value = personModel.Email,
+                    Value = personModel.Email.ToLower(),
                     DbType = DbType.String
                 };
                 SqlParameter Created = new SqlParameter()
@@ -421,13 +422,13 @@ namespace _1_AdressBook
                 SqlParameter FirstName = new SqlParameter()
                 {
                     ParameterName = "@FirstName",
-                    Value = personModel.FirstName,
+                    Value = _firstToUpper(personModel.FirstName),
                     DbType = DbType.String
                 };
                 SqlParameter LastName = new SqlParameter()
                 {
                     ParameterName = "@LastName",
-                    Value = personModel.LastName,
+                    Value = _firstToUpper(personModel.LastName),
                     DbType = DbType.String
                 };
                 SqlParameter Phone = new SqlParameter()
@@ -439,7 +440,7 @@ namespace _1_AdressBook
                 SqlParameter Email = new SqlParameter()
                 {
                     ParameterName = "@Email",
-                    Value = personModel.Email,
+                    Value = personModel.Email.ToLower(),
                     DbType = DbType.String
                 };
 
@@ -572,6 +573,16 @@ namespace _1_AdressBook
             {
                 sw.WriteLine($"{DateTime.Now.ToString("HH:mm:ss")} - {str}");
             }
+        }
+
+        private string _firstToUpper(string text)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(text[0].ToString().ToUpper());
+            sb.Append(text.Remove(0, 1));
+
+            return sb.ToString();
         }
     }
 }

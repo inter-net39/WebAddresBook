@@ -14,27 +14,25 @@ namespace _1_AdressBook.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult Index(int page = 1, string filter ="")
+        public ActionResult Index(int page = 1, string filter = "")
         {
             TempData["CurrentPage"] = page;
-            if (filter != "")
-            {
-                TempData["Filter"] = filter;
-            }
+            ViewBag.Filter = filter;
             return View();
         }
         [HttpGet]
         public ActionResult Table(int page = 1, string filter = "")
         {
             SourceManager manager = new SourceManager();
-            TempData["Filter"] = filter;
+            ViewBag.Filter = filter;
             TempData["CurrentPage"] = page;
             TempData["PageCount"] = ((manager.GetCount() - 1) / _rowsPerPage) + 1;
             if (filter != "")
             {
                 TempData["CurrentPage"] = page;
                 TempData["PageCount"] = ((manager.GetCount(filter) - 1) / _rowsPerPage) + 1;
-                return PartialView(manager.Get((page - 1) * _rowsPerPage, _rowsPerPage, filter));
+                var lista = manager.Get((page - 1) * _rowsPerPage, _rowsPerPage, filter);
+                return PartialView(lista);
             }
             return PartialView(manager.Get((page - 1) * _rowsPerPage, _rowsPerPage));
         }
