@@ -517,10 +517,8 @@ namespace _1_AdressBook
             {
                 new Exception("$11246262");
             }
-
             return result;
         }
-
         private bool TryOpenDB()
         {
             try

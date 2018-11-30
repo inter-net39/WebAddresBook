@@ -5,7 +5,7 @@ namespace _1_AdressBook.Controllers
 {
     public class PersonController : Controller
     {
-        private readonly int _rowsPerPage = 3;
+        private int _rowsPerPage = 3;
 
         [HttpGet]
         public ActionResult Index(int page = 1)
