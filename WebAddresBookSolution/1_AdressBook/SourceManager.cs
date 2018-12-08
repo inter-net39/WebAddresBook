@@ -3,10 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
+using System.Web.Services.Description;
 
 namespace _1_AdressBook
 {
@@ -17,6 +19,20 @@ namespace _1_AdressBook
         private string _connectionString = "";
 
         private SqlConnection _connection;
+
+
+        public SourceManager()
+        {
+            if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "setup.txt")))
+            {
+             
+                Process.Start("explorer.exe", (Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    ".")));
+            }
+        }
+
 
         public List<PersonModel> Get(int start, int take)
         {
@@ -523,33 +539,48 @@ namespace _1_AdressBook
         {
             try
             {
-                if (string.IsNullOrEmpty(_connectionString))
+                if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    "setup.txt")))
                 {
-                    using (StreamReader sr = new StreamReader(_setupFilePath))
-                    {
-                        _connectionString = @sr.ReadToEnd();
-                    }
+                    Process.Start("explorer.exe", (Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                        ".")));
                 }
-                if (_connection == null)
+                else
                 {
-                    _connection = new SqlConnection()
+                    if (string.IsNullOrEmpty(_connectionString))
                     {
-                        ConnectionString = _connectionString,
-                    };
-                    _connection.Open();
-                    if (_connection.State == ConnectionState.Open)
-                    {
-                        return true;
+                        using (StreamReader sr = new StreamReader(_setupFilePath))
+                        {
+                            _connectionString = @sr.ReadToEnd();
+                        }
                     }
-                    return false;
+
+                    if (_connection == null)
+                    {
+                        _connection = new SqlConnection()
+                        {
+                            ConnectionString = _connectionString,
+                        };
+                        _connection.Open();
+                        if (_connection.State == ConnectionState.Open)
+                        {
+                            return true;
+                        }
+
+                        return false;
+                    }
+
+                    throw new Exception("#054322");
                 }
-                throw new Exception("#054322");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
+                return false;
             }
+
+            return false;
         }
 
         protected void CloseDB()
