@@ -92,7 +92,7 @@ intellisense.annotate(jQuery, {
   },
   'Deferred': function() {
     /// <signature>
-    ///   <summary>A constructor function that returns a chainable utility object with methods to register multiple callbacks into callback queues, invoke callback queues, and relay the success or failure state of any synchronous or asynchronous function.</summary>
+    ///   <summary>A constructor function that returns a chainable utility object with methods to register multiple callbacks into callback queues, invoke callback queues, and relay the successs or failure state of any synchronous or asynchronous function.</summary>
     ///   <param name="beforeStart" type="Function">A function that is called just before the constructor returns.</param>
     ///   <returns type="Deferred" />
     /// </signature>
@@ -140,7 +140,7 @@ intellisense.annotate(jQuery, {
     ///   <summary>Load data from the server using a HTTP GET request.</summary>
     ///   <param name="url" type="String">A string containing the URL to which the request is sent.</param>
     ///   <param name="data" type="String">A plain object or string that is sent to the server with the request.</param>
-    ///   <param name="success(data, textStatus, jqXHR)" type="Function">A callback function that is executed if the request succeeds.</param>
+    ///   <param name="successs(data, textStatus, jqXHR)" type="Function">A callback function that is executed if the request succeeds.</param>
     ///   <param name="dataType" type="String">The type of data expected from the server. Default: Intelligent Guess (xml, json, script, or html).</param>
     ///   <returns type="jqXHR" />
     /// </signature>
@@ -150,7 +150,7 @@ intellisense.annotate(jQuery, {
     ///   <summary>Load JSON-encoded data from the server using a GET HTTP request.</summary>
     ///   <param name="url" type="String">A string containing the URL to which the request is sent.</param>
     ///   <param name="data" type="PlainObject">A plain object or string that is sent to the server with the request.</param>
-    ///   <param name="success(data, textStatus, jqXHR)" type="Function">A callback function that is executed if the request succeeds.</param>
+    ///   <param name="successs(data, textStatus, jqXHR)" type="Function">A callback function that is executed if the request succeeds.</param>
     ///   <returns type="jqXHR" />
     /// </signature>
   },
@@ -158,7 +158,7 @@ intellisense.annotate(jQuery, {
     /// <signature>
     ///   <summary>Load a JavaScript file from the server using a GET HTTP request, then execute it.</summary>
     ///   <param name="url" type="String">A string containing the URL to which the request is sent.</param>
-    ///   <param name="success(script, textStatus, jqXHR)" type="Function">A callback function that is executed if the request succeeds.</param>
+    ///   <param name="successs(script, textStatus, jqXHR)" type="Function">A callback function that is executed if the request succeeds.</param>
     ///   <returns type="jqXHR" />
     /// </signature>
   },
@@ -332,7 +332,7 @@ intellisense.annotate(jQuery, {
     ///   <summary>Load data from the server using a HTTP POST request.</summary>
     ///   <param name="url" type="String">A string containing the URL to which the request is sent.</param>
     ///   <param name="data" type="String">A plain object or string that is sent to the server with the request.</param>
-    ///   <param name="success(data, textStatus, jqXHR)" type="Function">A callback function that is executed if the request succeeds.</param>
+    ///   <param name="successs(data, textStatus, jqXHR)" type="Function">A callback function that is executed if the request succeeds.</param>
     ///   <param name="dataType" type="String">The type of data expected from the server. Default: Intelligent Guess (xml, json, script, text, html).</param>
     ///   <returns type="jqXHR" />
     /// </signature>
@@ -813,7 +813,7 @@ intellisense.annotate(jQuery.fn, {
   },
   'ajaxSuccess': function() {
     /// <signature>
-    ///   <summary>Attach a function to be executed whenever an Ajax request completes successfully. This is an Ajax Event.</summary>
+    ///   <summary>Attach a function to be executed whenever an Ajax request completes successsfully. This is an Ajax Event.</summary>
     ///   <param name="handler(event, XMLHttpRequest, ajaxOptions)" type="Function">The function to be invoked.</param>
     ///   <returns type="jQuery" />
     /// </signature>

@@ -5,7 +5,7 @@ namespace _1_AdressBook.Controllers
 {
     public class PersonController : Controller
     {
-        private int _rowsPerPage = 3;
+        private readonly int _rowsPerPage = 3;
 
         [HttpGet]
         public ActionResult Index(int page = 1)
@@ -40,7 +40,7 @@ namespace _1_AdressBook.Controllers
         [HttpGet]
         public ActionResult Add()
         {
-            TempData["succes"] = "";
+            TempData["success"] = "";
             return View();
         }
 
@@ -51,10 +51,10 @@ namespace _1_AdressBook.Controllers
             {
                 SourceManager manager = new SourceManager();
 
-                TempData["succes"] = "Dodano wpis o ID: " + manager.Add(model);
+                TempData["success"] = "Dodano wpis o ID: " + manager.Add(model);
                 return RedirectToAction("Index", "Person");
             }
-            TempData["succes"] = "Niepowodzenie podczas dodawania uzytkownika";
+            TempData["success"] = "Niepowodzenie podczas dodawania uzytkownika";
             return View(model);
         }
         [HttpGet]
@@ -78,7 +78,7 @@ namespace _1_AdressBook.Controllers
                 SourceManager manager = new SourceManager();
                 if (manager.Update(model) != -1)
                 {
-                    TempData["succes"] = "Pomyślnie zaktualizowano użytkownika o ID = " + model.ID;
+                    TempData["success"] = "Pomyślnie zaktualizowano użytkownika o ID = " + model.ID;
                     return RedirectToAction("Index", "Person");
                 }
             }
@@ -106,7 +106,7 @@ namespace _1_AdressBook.Controllers
                 TempData["error"] = "Wystąpił błąd podczas usuwania użytkownika";
                 return RedirectToAction("Index", 1);
             }
-            TempData["succes"] = "Pomyślnie Usunięto użytkownika użytkownika.";
+            TempData["success"] = "Pomyślnie Usunięto użytkownika użytkownika.";
             return RedirectToAction("Index", 1);
         }
     }

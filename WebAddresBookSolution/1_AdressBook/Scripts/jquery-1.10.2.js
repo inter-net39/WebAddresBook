@@ -2798,7 +2798,7 @@ function matcherFromGroupMatchers( elementMatchers, setMatchers ) {
 				// Add matches to results
 				push.apply( results, setMatched );
 
-				// Seedless set matches succeeding multiple successful matchers stipulate sorting
+				// Seedless set matches succeeding multiple successsful matchers stipulate sorting
 				if ( outermost && !seed && setMatched.length > 0 &&
 					( matchedCount + setMatchers.length ) > 1 ) {
 
@@ -8005,7 +8005,7 @@ jQuery.extend({
 
 		// Attach deferreds
 		deferred.promise( jqXHR ).complete = completeDeferred.add;
-		jqXHR.success = jqXHR.done;
+		jqXHR.successs = jqXHR.done;
 		jqXHR.error = jqXHR.fail;
 
 		// Remove hash character (#7531: and string promotion)
@@ -8121,7 +8121,7 @@ jQuery.extend({
 		strAbort = "abort";
 
 		// Install callbacks on deferreds
-		for ( i in { success: 1, error: 1, complete: 1 } ) {
+		for ( i in { successs: 1, error: 1, complete: 1 } ) {
 			jqXHR[ i ]( s[ i ] );
 		}
 
@@ -8161,7 +8161,7 @@ jQuery.extend({
 
 		// Callback for when everything is done
 		function done( status, nativeStatusText, responses, headers ) {
-			var isSuccess, success, error, response, modified,
+			var isSuccess, successs, error, response, modified,
 				statusText = nativeStatusText;
 
 			// Called once
@@ -8187,7 +8187,7 @@ jQuery.extend({
 			// Set readyState
 			jqXHR.readyState = status > 0 ? 4 : 0;
 
-			// Determine if successful
+			// Determine if successsful
 			isSuccess = status >= 200 && status < 300 || status === 304;
 
 			// Get response data
@@ -8198,7 +8198,7 @@ jQuery.extend({
 			// Convert no matter what (that way responseXXX fields are always set)
 			response = ajaxConvert( s, response, jqXHR, isSuccess );
 
-			// If successful, handle type chaining
+			// If successsful, handle type chaining
 			if ( isSuccess ) {
 
 				// Set the If-Modified-Since and/or If-None-Match header, if in ifModified mode.
@@ -8224,7 +8224,7 @@ jQuery.extend({
 				// If we have data, let's convert it
 				} else {
 					statusText = response.state;
-					success = response.data;
+					successs = response.data;
 					error = response.error;
 					isSuccess = !error;
 				}
@@ -8246,7 +8246,7 @@ jQuery.extend({
 
 			// Success/Error
 			if ( isSuccess ) {
-				deferred.resolveWith( callbackContext, [ success, statusText, jqXHR ] );
+				deferred.resolveWith( callbackContext, [ successs, statusText, jqXHR ] );
 			} else {
 				deferred.rejectWith( callbackContext, [ jqXHR, statusText, error ] );
 			}
@@ -8257,7 +8257,7 @@ jQuery.extend({
 
 			if ( fireGlobals ) {
 				globalEventContext.trigger( isSuccess ? "ajaxSuccess" : "ajaxError",
-					[ jqXHR, s, isSuccess ? success : error ] );
+					[ jqXHR, s, isSuccess ? successs : error ] );
 			}
 
 			// Complete
@@ -8298,7 +8298,7 @@ jQuery.each( [ "get", "post" ], function( i, method ) {
 			type: method,
 			dataType: type,
 			data: data,
-			success: callback
+			successs: callback
 		});
 	};
 });
@@ -8450,7 +8450,7 @@ function ajaxConvert( s, response, jqXHR, isSuccess ) {
 		}
 	}
 
-	return { state: "success", data: response };
+	return { state: "successs", data: response };
 }
 // Install script dataType
 jQuery.ajaxSetup({
@@ -8520,7 +8520,7 @@ jQuery.ajaxTransport( "script", function(s) {
 
 						// Callback if not abort
 						if ( !isAbort ) {
-							callback( 200, "success" );
+							callback( 200, "successs" );
 						}
 					}
 				};
@@ -8770,8 +8770,8 @@ if ( xhrSupported ) {
 
 									// Filter status for non standard behaviors
 
-									// If the request is local and we have data: assume a success
-									// (success with no data won't get notified, that's the best we
+									// If the request is local and we have data: assume a successs
+									// (successs with no data won't get notified, that's the best we
 									// can do given current implementations)
 									if ( !status && s.isLocal && !s.crossDomain ) {
 										status = responses.text ? 200 : 404;

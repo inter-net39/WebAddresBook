@@ -34,10 +34,8 @@ namespace _1_AdressBook.Models
         [Required(ErrorMessage = "To Pole jest wymagane"), EmailAddress(ErrorMessage = "Bład formatu E-mail"), StringLength(50,ErrorMessage = "Zbyt długi adres E-mail"), DisplayName("Email")]
         public string Email { get; set; }
 
-        //[Required(ErrorMessage = "To Pole jest wymagane"), DataType(DataType.Date, ErrorMessage = "Bład formatu Daty"), DisplayFormat(DataFormatString = "{0:dd/MMM/yyyy}"), DisplayName("Data Utworzenia")]
         public DateTime Created { get; set; }
 
-        //[DataType(DataType.Date, ErrorMessage = "Bład formatu Daty"), DisplayFormat(DataFormatString = "{0:dd/MMM/yyyy}"), DisplayName("Data Modyfikacji")]
         public DateTime? Updated { get; set; }
 
         public string GetCreated()

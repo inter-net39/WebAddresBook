@@ -40,13 +40,13 @@
 			<div class="col-lg-6">
 				@if ((int)TempData["CurrentPage"] != 1)
 				{
-					@Html.ActionLink("Poprzednia Strona", "Index", new { page = (int)TempData["CurrentPage"] - 1, filter = ViewBag.Filter }, new { @class = "btn btn-outline-success" })
+					@Html.ActionLink("Poprzednia Strona", "Index", new { page = (int)TempData["CurrentPage"] - 1, filter = ViewBag.Filter }, new { @class = "btn btn-outline-successs" })
 				}
 			</div>
 			<div class="col-lg-6 float-right">
 				@if ((int)TempData["PageCount"] > (int)TempData["CurrentPage"])
 				{
-					@Html.ActionLink("Następna Strona", "Index", new { page = (int)TempData["CurrentPage"] + 1, filter = ViewBag.Filter }, new { @class = "btn btn-outline-success float-right" })
+					@Html.ActionLink("Następna Strona", "Index", new { page = (int)TempData["CurrentPage"] + 1, filter = ViewBag.Filter }, new { @class = "btn btn-outline-successs float-right" })
 				}
 			</div>
 		</div>

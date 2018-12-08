@@ -8,13 +8,12 @@
 <div class="col-lg-10 offset-lg-1 align-center mt-2">
 	<div class="d-flex justify-content-between">
 		<div class="col-lg-12">
-			@if (TempData["succes"] != null)
+			@if (TempData["success"] != null)
 			{
-				if ((string)(TempData["succes"]) != "")
+				if ((string)(TempData["success"]) != "")
 				{
 					<div class="alert alert-success text-center" role="alert">
-						<h4 class="alert-heading text-center">Sukces</h4>
-						<p>@TempData["succes"]</p>
+						<p>@TempData["success"]</p>
 					</div>
 				}
 			}
@@ -27,7 +26,6 @@
 				if ((string)(TempData["error"]) != "")
 				{
 					<div class="alert alert-danger text-center" role="alert">
-						<h4 class="alert-heading text-center">Niepowodzenie</h4>
 						<p>@TempData["error"]</p>
 					</div>
 				}
